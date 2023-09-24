@@ -65,7 +65,7 @@ def des_query(des):
    con = sqlite3.connect('motulo.db')
    cur = con.cursor()
    col = "_0_ETA_ETD, _3_Ship_Name, _4_GT, _5_Type, _6_From, _7_To, _9_Locked"
-   query = f'SELECT {col} FROM los WHERE (LOWER(_6_From) LIKE "{des}" OR LOWER(_7_To) LIKE "{des}") AND CAST(_4_GT AS INTEGER) >= 20000'
+   query = f'SELECT {col} FROM los WHERE (LOWER(_6_From) LIKE "{des}" OR LOWER(_7_To) LIKE "{des}" OR LOWER(_7_To) LIKE "sture" OR LOWER(_6_From) LIKE "sture") AND CAST(_4_GT AS INTEGER) >= 20000'
    cur.execute(query)
    res = cur.fetchall()
    cur.close()

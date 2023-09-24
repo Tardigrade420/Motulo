@@ -20,22 +20,26 @@ body {
 
 /* Apply styles to the table with class "table" */
 .table {
-    width: 100%;
+    width: 90%;
     border-collapse: collapse;
     margin-bottom: 20px;
     font-family: Arial, sans-serif;
 }
 
 /* Style the table header (thead) */
-.table thead {
-    background-color: #5e5656;
+.thead {
+    background-color: #1b1919af;
 }
 
 /* Style table header cells (th) */
 .table th {
-    text-align: left;
+    text-align: center;
+    background-color: #8b91e9;
     padding: 10px;
     border-bottom: 2px solid #333;
+    border-top: 1px solid #999;
+    border-left: 1px solid #999;
+    border-right: 1px solid #999;
 }
 
 /* Style table rows (tr) */
@@ -52,6 +56,9 @@ body {
 .table td {
     padding: 10px;
     border-bottom: 1px solid #ddd;
+    border-top: 1px solid #ddd;
+    border-left: 1px solid #ddd;
+    border-right: 1px solid #ddd;
 }
 
 /* Hover effect on rows */
