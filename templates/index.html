@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block head %}
+
+<title>Motulo</title>
+
+{% endblock %}
+
+{% block body %}
+
+<div class="weather">
+    <img src="https://www.yr.no/nb/innhold/1-120477/meteogram.svg">
+</div>
+
+<div class="table-container">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ETA/ETD</th>
+                <th>Ship Name</th>
+                <th>GT</th>
+                <th>Type</th>
+                <th>From</th>
+                <th>To</th>
+                <th>Locked</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for row in result %}
+          <tr>
+            <td>{{ row[0] }}</td>
+            <td>{{ row[1] }}</td>
+            <td>{{ row[2] }}</td>
+            <td>{{ row[3] }}</td>
+            <td>{{ row[4] }}</td>
+            <td>{{ row[5] }}</td>
+            <td style="text-align: center;">{{ row[6] }}</td>
+          </tr>
+        {% endfor %}
+        </tbody>   
+    </table>
+</div>
+
+
+{% endblock %}
