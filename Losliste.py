@@ -1,6 +1,7 @@
 import http.client
 import sqlite3
-import time
+from datetime import datetime
+import pytz
 from bs4 import BeautifulSoup
 
 
@@ -40,7 +41,8 @@ def current_pilotages():
    con.commit()
    cur.close()
    con.close()
-   return time.strftime("%H:%M %Z")
+   cest = datetime.now(tz=pytz.timezone('Europe/Oslo'))
+   return cest.strftime("%H:%M")
 
 def des_query(des):
    last_update = current_pilotages()
