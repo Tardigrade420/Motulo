@@ -40,7 +40,7 @@ def current_pilotages():
    con.commit()
    cur.close()
    con.close()
-   return time.strftime("%H:%M")
+   return time.strftime("%H:%M %Z")
 
 def des_query(des):
    last_update = current_pilotages()
