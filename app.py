@@ -16,5 +16,4 @@ if __name__ == "__main__":
     #Comment out for local testing
     from waitress import serve
     serve(app, host="0.0.0.0", port=8080)
-    #Uncomment for local testing
-    #app.run(debug=True)
+    #app.run(debug=True) #Uncomment for local testing
