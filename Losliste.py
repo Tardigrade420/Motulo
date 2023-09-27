@@ -1,5 +1,6 @@
 import http.client
 import sqlite3
+import time
 from bs4 import BeautifulSoup
 
 
@@ -39,20 +40,10 @@ def current_pilotages():
    con.commit()
    cur.close()
    con.close()
-
-def gt_query(gt):
-   current_pilotages()
-   con = sqlite3.connect('motulo.db')
-   cur = con.cursor()
-   query = f'SELECT * FROM los WHERE CAST(_4_GT AS INTEGER) >= {gt}'
-   cur.execute(query)
-   res = cur.fetchall()
-   cur.close()
-   con.close()
-   return res
+   return time.strftime("%H:%M")
 
 def des_query(des):
-   current_pilotages()
+   last_update = current_pilotages()
    con = sqlite3.connect('motulo.db')
    cur = con.cursor()
    col = "_0_ETA_ETD, _3_Ship_Name, _4_GT, _5_Type, _6_From, _7_To, _9_Locked"
@@ -61,4 +52,4 @@ def des_query(des):
    res = cur.fetchall()
    cur.close()
    con.close()
-   return res
+   return res, last_update

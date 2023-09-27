@@ -8,33 +8,32 @@
 
 {% block body %}
 
-<div class="weather">
+<div class="container-sm text-center">
     <img src="https://www.yr.no/nb/innhold/1-120477/meteogram.svg">
 </div>
 
-<div class="table-container">
-    <table class="table">
-        <thead class="thead">
+<div class="container-sm">
+    <table class="table table-striped table-hover table-bordered caption-top">
+        <caption>Last update: {{ last_update }}</caption>
+        <thead class="table-primary text-center">
             <tr>
-                <th>ETA/ETD</th>
-                <th>Ship Name</th>
-                <th>GT</th>
-                <th>Type</th>
-                <th>From</th>
-                <th>To</th>
-                <th>Locked</th>
+                <th scope="col">X</th>
+                <th scope="col">ETA/ETD</th>
+                <th scope="col">Ship Name</th>
+                <th scope="col">GT</th>
+                <th scope="col">From</th>
+                <th scope="col">To</th>
             </tr>
         </thead>
-        <tbody>
+        <tbody class="table-group-divider">
         {% for row in result %}
           <tr>
+            <th style="text-align: center;">{{ row[6] }}</th>
             <td>{{ row[0] }}</td>
             <td>{{ row[1] }}</td>
             <td>{{ row[2] }}</td>
-            <td>{{ row[3] }}</td>
             <td>{{ row[4] }}</td>
             <td>{{ row[5] }}</td>
-            <td style="text-align: center;">{{ row[6] }}</td>
           </tr>
         {% endfor %}
         </tbody>   
