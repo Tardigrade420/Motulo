@@ -163,3 +163,4 @@ cython_debug/
 motulo.db
 .motulo.db
 tests/
+test.db
