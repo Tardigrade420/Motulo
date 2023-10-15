@@ -7,31 +7,47 @@
 {% endblock %}
 
 {% block body %}
-<div class="container">
-    <div class="row">
-        <img class="col img-fluid mx-auto" style="min-width: 516px; max-width: 700px; justify-content: center;" src="https://www.yr.no/nb/innhold/1-120477/meteogram.svg">
-    </div>
-    <div class="row">
-        <div class="column">
-            <p>Sist oppdatert: {{ last_update }} {{ errormsg }}</p>
+
+
+<div class="container-fluid">
+
+    <nav class="navbar sticky-top navbar-light bg-light justify-content-end" style="min-width: 516px;">
+        <div class="collapse navbar-collapse" id="settings">
+            <div class="bg">
+                <form action="/" method="get" class="m-3">
+                    <input class="form-check-input" type="checkbox" id="mon" value="mongstad" name="dest" {%if "mongstad" in dest %}checked{% endif %}>
+                    <label class="form-check-label" for="mon">Mongstad</label>
+                    <input class="form-check-input" type="checkbox" id="stu" value="sture" name="dest" {%if "sture" in dest %}checked{% endif %}>
+                    <label class="form-check-label" for="stu">Sture</label>
+                    <input class="form-check-input" type="checkbox" id="haug" value="haugsoytangen anchorage" name="dest" {%if "haugsoytangen anchorage" in dest %}checked{% endif %}>
+                    <label class="form-check-label" for="haug">Haugsøytangen</label>
+                    <input class="form-check-input" type="checkbox" id="esc" value=20000 name="gt"{%if "20000" in gt %}checked{% endif %}>
+                    <label class="form-check-label" for="esc">Vis kun eskortepliktig</label>
+                    <input class="form-check-input" type="checkbox" id="wx" value=weather name="wx"{%if "weather" in wx %}checked{% endif %}>
+                    <label class="form-check-label" for="wx">Vis værmelding</label>
+                    <button class="btn btn-outline-success" type="submit">Ok</button>
+                </form>
+            </div>
         </div>
-        <div class="column">
-            <form action="/" method="get">
-                <input type="checkbox" id="mon" value="mongstad" name="dest" {%if "mongstad" in dest %}checked{% endif %}>
-                <label for="mon">Mongstad</label>
-                <input type="checkbox" id="stu" value="sture" name="dest" {%if "sture" in dest %}checked{% endif %}>
-                <label for="stu">Sture</label>
-                <input type="checkbox" id="fon" value="fonnesflaket anchorage" name="dest" {%if "fonnesflaket anchorage" in dest %}checked{% endif %}>
-                <label for="fon">Fonnesflaket</label>
-                <input type="checkbox" id="esc" value=20000 name="gt"{%if "20000" in gt %}checked{% endif %}>
-                <label for="esc">Vis kun eskortepliktig</label>
-                <input type="submit">
-            </form>
+        <button class="navbar-toggler col-2" type="button" data-bs-toggle="collapse" data-bs-target="#settings" aria-controls="settings" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+    </nav>
+
+    <div class="{%if "weather" not in wx %}collapse{% endif %} container" id="weather">
+        <div class="row">
+          <img class="col img-fluid mx-auto" style="min-width: 516px; max-width: 700px; justify-content: center;" src="https://www.yr.no/nb/innhold/1-120477/meteogram.svg">
         </div>
     </div>
 
-    <div class="row">
-        <table class=" col table table-striped table-hover table-bordered">
+    <div class="container">
+        <div class="container">
+            <p style="font-size: smaller;">Sist oppdatert: {{ last_update }} {{ errormsg }}</p>
+        </div>
+    </div>
+
+    <div class="container justify-content-center">
+        <table class="table table-striped table-hover table-bordered">
             <thead class="table-primary text-center">
                 <tr>
                     <th scope="col">X</th>

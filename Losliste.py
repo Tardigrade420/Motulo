@@ -60,7 +60,7 @@ def current_pilotages():
 
 
 def worker():
-   schedule.every(30).seconds.do(current_pilotages)
+   schedule.every(60).seconds.do(current_pilotages)
    while True:
       schedule.run_pending()
       time.sleep(1)
