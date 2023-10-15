@@ -3,7 +3,7 @@ import Losliste
 import os
 
 app = Flask(__name__)
-app.secret_key = 'fewuioifwuiowfhuiefljb76534567'
+app.secret_key = os.getenv('SECRET_KEY')
 
 #Losliste.current_pilotages()
 Losliste.start()
