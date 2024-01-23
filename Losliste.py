@@ -11,6 +11,7 @@ errormsg = ""
 last_update = None
 lock = threading.Lock()
 
+#Hente inn alle losoppdrag fra kvitsøy los og lagre i sqlite database
 def current_pilotages():
    payload = "__VIEWSTATE=%2FwEPDwUKLTYwMjM1ODI1OWRkihciWXOT7la0fVxgo82dzspjLffjhsDX7ILdV%2Fpg4yc%3D&ctl00%24MainContent%24PilotageDispatchDepartmentDropDown=2353122&ctl00%24MainContent%24PilotageDipatchLocationDropDown=None&ctl00%24MainContent%24ShowPilotages=Show%2BPilotages"
    headers = {'Content-Type': "application/x-www-form-urlencoded" }
@@ -58,19 +59,20 @@ def current_pilotages():
       error = type(exception)
       errormsg = "Feilet kl: " + cest.strftime("%H:%M:%S, ") + str(error) + str(exception)
 
-
+#Sørge for oppdatering av database hvert minutt
 def worker():
    schedule.every(60).seconds.do(current_pilotages)
    while True:
       schedule.run_pending()
       time.sleep(1)
 
+#Sørge for at oppdatering av database ikke forstyrrer lasting av webside
 def start():
    current_pilotages()
    loop_thread = threading.Thread(target=worker)
    loop_thread.start()
    
-
+#generell sql query til database
 def des_query(ton, des):
     global errormsg
     if len(des) == 0:
@@ -97,3 +99,32 @@ def des_query(ton, des):
        res = ["feil"]
        return res, last_update, errormsg
 
+#Spesifikk sql query til database for Kårstø
+def karsto_query(des):
+    global errormsg
+    des_l = ["karsto"]
+    for i in des:
+       des_l.append(i)
+    des_t = tuple(des_l)
+    if len(des) == 0:
+       des_q = 'OR LOWER("To") LIKE "karsto"'
+    elif type(des) == tuple and len(des) >= 1:
+       des_q = f'OR LOWER("To") IN {des_t}'
+    elif type(des) == str:
+        des_q = f'OR LOWER("To") LIKE "{des}"'
+    try:
+       con = sqlite3.connect('motulo.db')
+       cur = con.cursor()
+       col = '"ETA/ETD", "Ship Name", "GT", "Type", "From", "To", "Locked"'
+       query = f'''SELECT {col} FROM los WHERE LOWER("From") LIKE "karsto" {des_q}'''
+       cur.execute(query)
+       res = cur.fetchall()
+       cur.close()
+       con.close()
+       return res, last_update, errormsg
+    except Exception as exception:
+       error = type(exception)
+       #errormsg = f'Feil {des_q}, {des}'
+       errormsg = "Database query failure: " + str(error) + " " + str(exception)
+       res = ["feil"]
+       return res, last_update, errormsg
