@@ -8,7 +8,6 @@
 
 {% block body %}
 
-
 <div class="container-fluid">
 
     <nav class="navbar sticky-top navbar-light bg-light justify-content-end">
@@ -71,9 +70,11 @@
                 <td>{{ row[2] }}</td>
                 <td>{{ row[4] }}</td>
                 <td>{{ row[5] }}</td>
-                <td>{% if row[2] |int < 12000 and row[5] == "Karsto" %} 1
+                <td style="text-align: center;">{% if row[2] |int < 12000 and row[5] == "Karsto" %} 1
                     {% elif row[2] |int < 30000 and row[5] == "Karsto" %} 2
                     {% elif row[2] |int >= 30000 and row[5] == "Karsto" %} 3
+                    {% elif row[2] |int < 12000 and row[4] == "Karsto" %} 1
+                    {% elif row[2] |int >= 12000 and row[4] == "Karsto" %} 2
                     {% else %}
                     {% endif %}
                 </td>
