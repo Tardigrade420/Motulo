@@ -8,21 +8,16 @@
 
 {% block body %}
 
-
 <div class="container-fluid">
 
     <nav class="navbar sticky-top navbar-light bg-light justify-content-end">
         <div class="collapse navbar-collapse" id="settings">
             <div class="bg">
-                <form action="/" method="get" class="m-3">
-                    <input class="form-check-input" type="checkbox" id="mon" value="mongstad" name="dest" {%if "mongstad" in dest %}checked{% endif %}>
-                    <label class="form-check-label" for="mon">Mongstad</label>
-                    <input class="form-check-input" type="checkbox" id="stu" value="sture" name="dest" {%if "sture" in dest %}checked{% endif %}>
-                    <label class="form-check-label" for="stu">Sture</label>
-                    <input class="form-check-input" type="checkbox" id="haug" value="haugsoytangen anchorage" name="dest" {%if "haugsoytangen anchorage" in dest %}checked{% endif %}>
-                    <label class="form-check-label" for="haug">Haugsøytangen</label>
-                    <input class="form-check-input" type="checkbox" id="esc" value=20000 name="gt"{%if "20000" in gt %}checked{% endif %}>
-                    <label class="form-check-label" for="esc">Vis kun eskortepliktig</label>
+                <form action="/karsto" method="get" class="m-3">
+                    <input class="form-check-input" type="checkbox" id="her" value="hervikfjorden anchorage" name="dest" {%if "hervikfjorden anchorage" in dest %}checked{% endif %}>
+                    <label class="form-check-label" for="her">Hervikfjorden</label>
+                    <input class="form-check-input" type="checkbox" id="falk" value="falkeidflaet anchorage" name="dest" {%if "falkeidflaet anchorage" in dest %}checked{% endif %}>
+                    <label class="form-check-label" for="falk">Falkeidflaet</label>
                     <input class="form-check-input" type="checkbox" id="wx" value=weather name="wx"{%if "weather" in wx %}checked{% endif %}>
                     <label class="form-check-label" for="wx">Vis værmelding</label>
                     <button class="btn btn-outline-success" type="submit">Ok</button>
@@ -36,7 +31,7 @@
 
     <div class="{%if "weather" not in wx %}collapse{% endif %} container" id="weather">
         <div class="row">
-          <img class="col img-fluid mx-auto" style="max-width: 700px; justify-content: center;" src="https://www.yr.no/nb/innhold/1-120477/meteogram.svg">
+          <img class="col img-fluid mx-auto" style="max-width: 700px; justify-content: center;" src="https://www.yr.no/nb/innhold/1-506631/meteogram.svg">
         </div>
     </div>
 
@@ -63,6 +58,7 @@
                     <th scope="col">GT</th>
                     <th scope="col">From</th>
                     <th scope="col">To</th>
+                    <th scope="col">Tugs</th>
                 </tr>
             </thead>
             <tbody class="table-group-divider">
@@ -74,6 +70,14 @@
                 <td>{{ row[2] }}</td>
                 <td>{{ row[4] }}</td>
                 <td>{{ row[5] }}</td>
+                <td style="text-align: center;">{% if row[2] |int < 12000 and row[5] == "Karsto" %} 1
+                    {% elif row[2] |int < 30000 and row[5] == "Karsto" %} 2
+                    {% elif row[2] |int >= 30000 and row[5] == "Karsto" %} 3
+                    {% elif row[2] |int < 12000 and row[4] == "Karsto" %} 1
+                    {% elif row[2] |int >= 12000 and row[4] == "Karsto" %} 2
+                    {% else %}
+                    {% endif %}
+                </td>
             </tr>
             {% endfor %}
             </tbody>   
