@@ -13,7 +13,7 @@ lock = threading.Lock()
 
 #Hente inn alle losoppdrag fra kvitsøy los og lagre i sqlite database
 def current_pilotages():
-   payload = "__EVENTTARGET%3D&=__EVENTARGUMENT%3D&=ctl00%24HiddenMap%24hfSelectedLocationID%3D&__VIEWSTATE=%2FwEPDwUKLTYwMjM1ODI1OWRk05nOB5i3NkixgsNR0lX0XX6SxP9adfsMVHy7ZY3hJOc%3D&__VIEWSTATEGENERATOR=272EAD92&ctl00%24MainContent%24PilotageDispatchDepartmentDropDown=2353122&ctl00%24MainContent%24PilotageDipatchLocationDropDown=None&ctl00%24MainContent%24ShowPilotages=Show%2BPilotages"
+   payload = "__EVENTTARGET%3D&=__EVENTARGUMENT%3D&=ctl00%24HiddenMap%24hfSelectedLocationID%3D&__VIEWSTATE=%2FwEPDwUKLTYwMjM1ODI1OWRkERK8UYmONULlpgr5XZOMdS7RsgS6UpZZOpl%2B%2BdIXC2A%3D&__VIEWSTATEGENERATOR=272EAD92&ctl00%24MainContent%24PilotageDispatchDepartmentDropDown=2353122&ctl00%24MainContent%24PilotageDipatchLocationDropDown=0&ctl00%24MainContent%24ShowPilotages=Show%2BPilotages"
    headers = {'Content-Type': "application/x-www-form-urlencoded" }
    cest = datetime.now(tz=pytz.timezone('Europe/Oslo'))
    head = []
@@ -61,7 +61,7 @@ def current_pilotages():
 
 #Sørge for oppdatering av database hvert minutt
 def worker():
-   schedule.every(135).seconds.do(current_pilotages)
+   schedule.every(147).seconds.do(current_pilotages)
    while True:
       schedule.run_pending()
       time.sleep(1)
