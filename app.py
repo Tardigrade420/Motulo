@@ -3,13 +3,14 @@ import Losliste
 import os
 
 app = Flask(__name__)
-app.secret_key = os.getenv('SECRET_KEY')
+app.secret_key = "njsjnefenefjn"#os.getenv('SECRET_KEY')
 
 Losliste.current_pilotages()
-Losliste.start()
+#Losliste.start()
 
 @app.route("/")
 def index():
+    Losliste.current_pilotages()
     if not session and len(request.args) == 0:
         session['user'] = True
         return redirect("/?dest=mongstad")
@@ -41,6 +42,6 @@ def karsto():
 
 if __name__ == "__main__":
     #Comment out for local testing
-    from waitress import serve
-    serve(app, host="0.0.0.0", port=8080)
-    #app.run(debug=True, host='0.0.0.0') #Uncomment for local testing
+    #from waitress import serve
+    #serve(app, host="0.0.0.0", port=8080)
+    app.run(debug=True, host='0.0.0.0') #Uncomment for local testing

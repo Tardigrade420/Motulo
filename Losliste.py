@@ -6,6 +6,7 @@ import pytz
 from bs4 import BeautifulSoup
 import schedule
 import threading
+import urllib.parse
 
 errormsg = ""
 last_update = None
@@ -13,14 +14,30 @@ lock = threading.Lock()
 
 #Hente inn alle losoppdrag fra kvitsøy los og lagre i sqlite database
 def current_pilotages():
-   payload = "__VIEWSTATE=%2FwEPDwUKLTYwMjM1ODI1OWRkihciWXOT7la0fVxgo82dzspjLffjhsDX7ILdV%2Fpg4yc%3D&ctl00%24MainContent%24PilotageDispatchDepartmentDropDown=2353122&ctl00%24MainContent%24PilotageDipatchLocationDropDown=None&ctl00%24MainContent%24ShowPilotages=Show%2BPilotages"
-   headers = {'Content-Type': "application/x-www-form-urlencoded" }
+   global last_update
+   global errormsg
    cest = datetime.now(tz=pytz.timezone('Europe/Oslo'))
+   viewstate = ""
+   try:
+      #get request for å finne viewstate-kode
+      get_conn = http.client.HTTPSConnection("www.shiprep.no")
+      get_conn.request("GET", "/shiprepwebui/currentpilotages.aspx")
+      get_response = get_conn.getresponse()
+      get_data = get_response.read()
+      get_soup = BeautifulSoup(get_data, 'html.parser')
+      viewstate_input = get_soup.find('input', {'id': '__VIEWSTATE'})
+      viewstate_value = viewstate_input['value']
+      viewstate = urllib.parse.quote(viewstate_value)
+   except Exception as exception:
+      error = type(exception)
+      errormsg = "GET Feilet kl: " + cest.strftime("%H:%M:%S, ") + str(error) + str(exception)
+   #post request for loslisten
+   payload = f'__VIEWSTATE={viewstate}&ctl00%24MainContent%24PilotageDispatchDepartmentDropDown=2353122&ctl00%24MainContent%24PilotageDipatchLocationDropDown=None&ctl00%24MainContent%24ShowPilotages=Show%2BPilotages'
+   headers = {'Content-Type': "application/x-www-form-urlencoded" }
    head = []
    list_data = []
    i = 0
-   global last_update
-   global errormsg
+   
    try:
       #Hente data inn til database
       conn = http.client.HTTPSConnection("www.shiprep.no")
@@ -61,7 +78,7 @@ def current_pilotages():
 
 #Sørge for oppdatering av database hvert minutt
 def worker():
-   schedule.every(60).seconds.do(current_pilotages)
+   schedule.every(53).seconds.do(current_pilotages)
    while True:
       schedule.run_pending()
       time.sleep(1)
