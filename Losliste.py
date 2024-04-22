@@ -61,7 +61,7 @@ def current_pilotages():
 
 #Sørge for oppdatering av database hvert minutt
 def worker():
-   schedule.every(147).seconds.do(current_pilotages)
+   schedule.every(53).seconds.do(current_pilotages)
    while True:
       schedule.run_pending()
       time.sleep(1)
