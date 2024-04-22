@@ -13,7 +13,7 @@ lock = threading.Lock()
 
 #Hente inn alle losoppdrag fra kvitsøy los og lagre i sqlite database
 def current_pilotages():
-   payload = "__EVENTTARGET%3D&=__EVENTARGUMENT%3D&=ctl00%24HiddenMap%24hfSelectedLocationID%3D&__VIEWSTATE=%2FwEPDwUKLTYwMjM1ODI1OWRkOBAwahtW5IAitaKOvDd7zJyluXZpmWg8eUb5Yx51ZDU%3D&__VIEWSTATEGENERATOR=272EAD92&ctl00%24MainContent%24PilotageDispatchDepartmentDropDown=2353122&ctl00%24MainContent%24PilotageDipatchLocationDropDown=None&ctl00%24MainContent%24ShowPilotages=Show%2BPilotages"
+   payload = "__EVENTTARGET%3D&=__EVENTARGUMENT%3D&=ctl00%24HiddenMap%24hfSelectedLocationID%3D&__VIEWSTATE=%2FwEPDwUKLTYwMjM1ODI1OWRkILKCb5riV%2BoOu1yxVQyIVOUbGALiGyTxXh3YZ77HssA%3D&__VIEWSTATEGENERATOR=272EAD92&ctl00%24MainContent%24PilotageDispatchDepartmentDropDown=2353122&ctl00%24MainContent%24PilotageDipatchLocationDropDown=None&ctl00%24MainContent%24ShowPilotages=Show%2BPilotages"
    headers = {'Content-Type': "application/x-www-form-urlencoded" }
    cest = datetime.now(tz=pytz.timezone('Europe/Oslo'))
    head = []
