@@ -2,7 +2,7 @@
 
 {% block head %}
 
-<title>Motulo</title>
+<title>Losliste</title>
 
 {% endblock %}
 
@@ -10,26 +10,37 @@
 
 
 <div class="container-fluid">
-
-    <nav class="navbar sticky-top navbar-light bg-light justify-content-end">
-        <div class="collapse navbar-collapse" id="settings">
+    <nav class="navbar sticky-top navbar-light bg-light">
+        <span class="navbar-text text-danger">Ny link! <a href="https://losliste.no">losliste.no</a></span>
+        <div class="collapse navbar-collapse {{ navbar }}" id="settings">
             <div class="bg">
                 <form action="/" method="get" class="m-3">
-                    <input class="form-check-input" type="checkbox" id="mon" value="mongstad" name="dest" {%if "mongstad" in dest %}checked{% endif %}>
-                    <label class="form-check-label" for="mon">Mongstad</label>
-                    <input class="form-check-input" type="checkbox" id="stu" value="sture" name="dest" {%if "sture" in dest %}checked{% endif %}>
-                    <label class="form-check-label" for="stu">Sture</label>
-                    <input class="form-check-input" type="checkbox" id="haug" value="haugsoytangen anchorage" name="dest" {%if "haugsoytangen anchorage" in dest %}checked{% endif %}>
-                    <label class="form-check-label" for="haug">Haugsøytangen</label>
-                    <input class="form-check-input" type="checkbox" id="esc" value=20000 name="gt"{%if "20000" in gt %}checked{% endif %}>
-                    <label class="form-check-label" for="esc">Vis kun eskortepliktig</label>
-                    <input class="form-check-input" type="checkbox" id="wx" value=weather name="wx"{%if "weather" in wx %}checked{% endif %}>
-                    <label class="form-check-label" for="wx">Vis værmelding</label>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" id="mon" value="mongstad" name="dest" {%if "mongstad" in dest %}checked{% endif %}>
+                        <label class="form-check-label" for="mon">Mongstad</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" id="stu" value="sture" name="dest" {%if "sture" in dest %}checked{% endif %}>
+                        <label class="form-check-label" for="stu">Sture</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" id="haug" value="haugsoytangen anchorage" name="dest" {%if "haugsoytangen anchorage" in dest %}checked{% endif %}>
+                        <label class="form-check-label" for="haug">Haugsøytangen</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" id="esc" value=20000 name="gt"{%if "20000" in gt %}checked{% endif %}>
+                        <label class="form-check-label" for="esc">Vis kun eskortepliktig</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" id="wx" value=weather name="wx"{%if "weather" in wx %}checked{% endif %}>
+                        <label class="form-check-label" for="wx">Vis værmelding</label>
+                    </div>
                     <button class="btn btn-outline-success" type="submit">Ok</button>
+                    <a href="/karsto?std=1" class="btn btn-outline-secondary btn-sm ms-2"><i class="bi bi-arrow-right-circle"></i>Trykk her for Kårstø</a>
                 </form>
             </div>
         </div>
-        <button class="navbar-toggler col-2" type="button" data-bs-toggle="collapse" data-bs-target="#settings" aria-controls="settings" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#settings" aria-controls="settings" aria-expanded="{{ expanded }}" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
     </nav>
