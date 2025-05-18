@@ -11,7 +11,7 @@
 
 <div class="container-fluid">
     <nav class="navbar sticky-top navbar-light bg-light">
-        <span class="navbar-text text-danger">Ny link! <a href="https://losliste.no">losliste.no</a></span>
+        <span class="navbar-text"></span>
         <div class="collapse navbar-collapse {{ navbar }}" id="settings">
             <div class="bg">
                 <form action="/" method="get" class="m-3">
@@ -89,6 +89,20 @@
             {% endfor %}
             </tbody>   
         </table>
+    </div>
+
+    <!-- Weather Information -->
+    <div class="container-fluid bg-light py-2">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <small class="text-muted">Vær Flesland: <span id="metarText">Loading...</span></small>
+                </div>
+                <div class="col-md-6">
+                    <small class="text-muted">Værvarsel: <span id="tafText">Loading...</span></small>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
