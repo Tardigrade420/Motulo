@@ -157,6 +157,7 @@ async function fetchWindData() {
 
         const vind = data["2"].Value.toFixed(1)
         const kast = data["3"].Value.toFixed(1)
+        const retning = data["1"].Value.toFixed(0)
         const tid = new Date(data["2"].Timestamp).toLocaleTimeString('nb-NO', { 
             timeZone: 'Europe/Oslo',
             hour: '2-digit',
@@ -165,7 +166,7 @@ async function fetchWindData() {
 
         const windElement = document.getElementById('wind');
         if (windElement) {
-            windElement.textContent = `Vind Fedje kl ${tid}: ${vind} m/s, ${data["1"].Value.toFixed(0)}°, ${kast} m/s i kastene`;
+            windElement.textContent = `Vind Fedje kl ${tid}: ${vind} m/s, ${String(retning).padStart(3, '0')}°, ${kast} m/s i kastene`;
         }
 
         return null;    
