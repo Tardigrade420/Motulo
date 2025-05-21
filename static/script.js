@@ -133,10 +133,48 @@ function scheduleUpdates() {
     }
     
     // Initial update
-    refreshWeatherData();
-    // Schedule next update
-    scheduleNextUpdate();
+    const tafElement = document.getElementById('tafText');
+    const windElement = document.getElementById('wind');
+    if (tafElement) {
+        refreshWeatherData();
+        scheduleNextUpdate();
+    }
+
+    if (windElement) {
+        fetchWindData();
+        setInterval(fetchWindData, 60000);
+    }
 }
+
+async function fetchWindData() {
+    try {
+        const response = await fetch('/wind_fedje');
+        const data = await response.json();
+        
+        if (!data) {
+            throw new Error('Invalid wind data format');
+        };
+
+        const vind = data["2"].Value.toFixed(1)
+        const kast = data["3"].Value.toFixed(1)
+        const tid = new Date(data["2"].Timestamp).toLocaleTimeString('nb-NO', { 
+            timeZone: 'Europe/Oslo',
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+
+        const windElement = document.getElementById('wind');
+        if (windElement) {
+            windElement.textContent = `Vind Fedje kl ${tid}: ${vind} m/s, ${data["1"].Value.toFixed(0)}°, ${kast} m/s i kastene`;
+        }
+
+        return null;    
+    } catch (error) {
+        console.error('Error fetching wind data:', error);
+        return null;
+    }
+}
+
 
 // Call the scheduling function when the page loads
 document.addEventListener('DOMContentLoaded', scheduleUpdates);

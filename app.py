@@ -84,6 +84,16 @@ def karsto():
     errormsg = update[2]
     return render_template('karsto.html', result=result, last_update=last_update, errormsg=errormsg, dest=dest, wx=wx, navbar=navbar, expanded=expanded)
 
+@app.route("/wind_fedje")
+def wind_fedje_route():
+    wind_data = Losliste.wind_fedje
+    if wind_data:
+        return wind_data
+    else:
+        return {"error": "Failed to fetch wind data"}, 500
+
+
+
 if __name__ == "__main__":
     #Comment out for local testing
     from waitress import serve

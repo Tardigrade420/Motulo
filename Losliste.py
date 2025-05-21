@@ -6,10 +6,12 @@ import pytz
 from bs4 import BeautifulSoup
 import schedule
 import threading
+import json
 
 errormsg = ""
 last_update = None
 lock = threading.Lock()
+wind_fedje = None
 
 #Hente inn alle losoppdrag fra kvitsøy los og lagre i sqlite database
 def current_pilotages():
@@ -62,6 +64,7 @@ def current_pilotages():
 #Sørge for oppdatering av database hvert minutt
 def worker():
    schedule.every(53).seconds.do(current_pilotages)
+   schedule.every(45).seconds.do(get_wind_fedje)
    while True:
       schedule.run_pending()
       time.sleep(1)
@@ -69,6 +72,7 @@ def worker():
 #Sørge for at oppdatering av database ikke forstyrrer lasting av webside
 def start():
    current_pilotages()
+   get_wind_fedje()
    loop_thread = threading.Thread(target=worker)
    loop_thread.start()
    
@@ -128,3 +132,16 @@ def karsto_query(des):
        errormsg = "Database query failure: " + str(error) + " " + str(exception)
        res = ["feil"]
        return res, last_update, errormsg
+    
+#Hente inn vinddata fra Fedje KV
+def get_wind_fedje():
+    global wind_fedje
+    try:
+        conn = http.client.HTTPSConnection("mobvaer.kystverket.no")
+        conn.request("GET", "/v4/stations/695059/free/lastSamples")
+        response = conn.getresponse()
+        data = json.loads(response.read().decode())
+        conn.close()
+        wind_fedje = data
+    except Exception as e:
+        return None
