@@ -146,6 +146,36 @@ function scheduleUpdates() {
     }
 }
 
+function checkLastUpdate() {
+    const lastUpdateElement = document.getElementById('last_update');
+    if (lastUpdateElement) {
+        // Extract the time string (should be in the format "Sist oppdatert: HH:MM:SS ...")
+        const match = lastUpdateElement.textContent.match(/(\d{2}):(\d{2}):(\d{2})/);
+        if (match) {
+            const now = new Date();
+            const updateTime = new Date(now);
+            updateTime.setHours(parseInt(match[1], 10));
+            updateTime.setMinutes(parseInt(match[2], 10));
+            updateTime.setSeconds(parseInt(match[3], 10));
+            
+            // Handle possible day transition (if last update was just before midnight)
+            if (updateTime > now) {
+                updateTime.setDate(updateTime.getDate() - 1);
+            }
+            
+            const diffMs = now - updateTime;
+            const diffMinutes = diffMs / (60 * 1000);
+            console.log(diffMinutes);
+
+            if (diffMinutes > 10 || lastUpdateElement.textContent.includes('Feilet')) {
+                // More than 10 minutes old
+                lastUpdateElement.style.backgroundColor = 'red';
+            }
+        }
+    }
+
+}
+
 async function fetchWindData() {
     try {
         const response = await fetch('/wind_fedje');
@@ -178,4 +208,7 @@ async function fetchWindData() {
 
 
 // Call the scheduling function when the page loads
-document.addEventListener('DOMContentLoaded', scheduleUpdates);
+document.addEventListener('DOMContentLoaded', () => {
+    scheduleUpdates();
+    checkLastUpdate();
+});
