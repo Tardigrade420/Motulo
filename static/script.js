@@ -165,7 +165,6 @@ function checkLastUpdate() {
             
             const diffMs = now - updateTime;
             const diffMinutes = diffMs / (60 * 1000);
-            console.log(diffMinutes);
 
             if (diffMinutes > 10 || lastUpdateElement.textContent.includes('Feilet')) {
                 // More than 10 minutes old
@@ -211,4 +210,5 @@ async function fetchWindData() {
 document.addEventListener('DOMContentLoaded', () => {
     scheduleUpdates();
     checkLastUpdate();
+    setInterval(checkLastUpdate, 60000); // Check every minute
 });
