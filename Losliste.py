@@ -13,6 +13,10 @@ last_update = None
 lock = threading.Lock()
 wind_fedje = None
 
+# Track the worker thread so we don't start multiple copies
+_worker_thread = None
+_worker_lock = threading.Lock()
+
 #Hente inn alle losoppdrag fra kvitsøy los og lagre i sqlite database
 def current_pilotages():
    payload = "__EVENTTARGET%3D&=__EVENTARGUMENT%3D&=ctl00%24HiddenMap%24hfSelectedLocationID%3D&__VIEWSTATE=&__VIEWSTATEGENERATOR=272EAD92&ctl00%24MainContent%24PilotageDispatchDepartmentDropDown=2353122&ctl00%24MainContent%24PilotageDipatchLocationDropDown=None&ctl00%24MainContent%24ShowPilotages=Show%2BPilotages"
@@ -63,6 +67,8 @@ def current_pilotages():
 
 #Sørge for oppdatering av database hvert minutt
 def worker():
+   # Clear any existing scheduled jobs to avoid duplicates if the worker is restarted
+   schedule.clear()
    schedule.every(53).seconds.do(current_pilotages)
    schedule.every(45).seconds.do(get_wind_fedje)
    while True:
@@ -71,10 +77,40 @@ def worker():
 
 #Sørge for at oppdatering av database ikke forstyrrer lasting av webside
 def start():
-   current_pilotages()
-   get_wind_fedje()
-   loop_thread = threading.Thread(target=worker)
-   loop_thread.start()
+   """
+   Ensure the background scheduler thread is running, and always trigger an immediate data reload.
+   Safe to call multiple times (e.g. from /restart) without spawning duplicate worker threads.
+   """
+   global _worker_thread
+   with _worker_lock:
+      # Always perform a fresh data load when start() is called
+      current_pilotages()
+      get_wind_fedje()
+
+      # If a worker thread already exists and is alive, don't start another one
+      if _worker_thread is not None and _worker_thread.is_alive():
+         return
+
+      # Start a new daemon worker thread
+      _worker_thread = threading.Thread(target=worker, daemon=True)
+      _worker_thread.start()
+
+def get_jobs_info():
+   """
+   Return a minimal list of scheduled jobs for status/debug views.
+   Each item contains the job's function name and next run time.
+   """
+   jobs = []
+   for job in schedule.get_jobs():
+      func_name = getattr(job.job_func, "__name__", str(job.job_func))
+      next_run = job.next_run.isoformat() if getattr(job, "next_run", None) else None
+      jobs.append(
+         {
+            "func_name": func_name,
+            "next_run": next_run,
+         }
+      )
+   return jobs
    
 #generell sql query til database
 def des_query(ton, des):

@@ -7,7 +7,6 @@ import pytz
 app = Flask(__name__)
 app.secret_key = os.getenv('SECRET_KEY')
 
-Losliste.current_pilotages()
 Losliste.start()
 
 @app.route("/sitemap.xml")
@@ -92,7 +91,39 @@ def wind_fedje_route():
     else:
         return {"error": "Failed to fetch wind data"}, 500
 
+@app.route("/status")
+def status():
+    cest = datetime.now(tz=pytz.timezone('Europe/Oslo'))
+    # Losliste.last_update is in "HH:MM:SS" format
+    last_update_time = None
+    last_update_minutes_ago = None
+    try:
+        if Losliste.last_update:
+            # Parse the time part
+            time_parts = [int(part) for part in Losliste.last_update.split(":")]
+            last_update_time = cest.replace(hour=time_parts[0], minute=time_parts[1], second=time_parts[2], microsecond=0)
+            # Compute minutes ago; if negative, assume it was "yesterday" at that time
+            diff_minutes = (cest - last_update_time).total_seconds() / 60
+            if diff_minutes < 0:
+                diff_minutes += 24 * 60
+            last_update_minutes_ago = diff_minutes
+    except Exception:
+        last_update_time = None
+        last_update_minutes_ago = None
 
+    status = {
+        "server_time": cest.strftime("%H:%M:%S"),
+        "last_update_time": Losliste.last_update,
+        "last_update_minutes_ago": last_update_minutes_ago,
+        "errormsg": Losliste.errormsg,
+        "jobs": Losliste.get_jobs_info(),
+    }
+    return render_template('status.html', status=status)
+
+@app.route("/restart")
+def restart():
+    Losliste.start()
+    return redirect(url_for('status'))
 
 if __name__ == "__main__":
     #Comment out for local testing

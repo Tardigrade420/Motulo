@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+
+{% block head %}
+
+<title>Losliste - Status</title>
+
+{% endblock %}
+
+{% block body %}
+
+
+<div class="container">
+    {# Guard against None: only treat as OK if we have a numeric value < 10 #}
+    {% set minutes_ago = status.last_update_minutes_ago %}
+    <h5>Status {% if minutes_ago is not none and minutes_ago < 10 %}<span class="text-success">OK</span>{% else %}<span class="text-danger">ERROR</span>{% endif %}</h5>
+    <div class="row">
+        <div class="col-6">
+            <h5>Server time</h5>
+            <p>{{ status.server_time }}</p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-6">
+            <h5>Last update time</h5>
+            <p>{{ status.last_update_time }}</p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-6">
+            <h5>Last update minutes ago</h5>
+            {% if minutes_ago is not none %}
+                <p>{{ minutes_ago|round(2) }} minutes</p>
+            {% else %}
+                <p>Unknown</p>
+            {% endif %}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-6">
+            <h5>Error message</h5>
+            {% if status.errormsg %}
+                <p>{{ status.errormsg }}</p>
+            {% else %}
+                <p>No error message</p>
+            {% endif %}
+        </div>
+    </div>
+    <div class="row mt-4">
+        <div class="col-12">
+            <h5>Scheduler jobs</h5>
+            {% if status.jobs and status.jobs|length > 0 %}
+                <table class="table table-sm table-bordered">
+                    <thead>
+                        <tr>
+                            <th scope="col">Function</th>
+                            <th scope="col">Next run (UTC)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for job in status.jobs %}
+                        <tr>
+                            <td>{{ job.func_name }}</td>
+                            <td>{{ job.next_run or 'Unknown' }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p class="text-muted">Scheduler not running or no scheduled jobs.</p>
+            {% endif %}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-6">
+            <a href="/restart" class="btn btn-outline-danger">Restart</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
