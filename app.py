@@ -125,6 +125,10 @@ def restart():
     Losliste.start()
     return redirect(url_for('status'))
 
+@app.route("/timestamp")
+def timestamp():
+    return datetime.now(tz=pytz.timezone('Europe/Oslo')).isoformat()
+
 if __name__ == "__main__":
     #Comment out for local testing
     from waitress import serve

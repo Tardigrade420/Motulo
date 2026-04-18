@@ -146,13 +146,15 @@ function scheduleUpdates() {
     }
 }
 
-function checkLastUpdate() {
+async function checkLastUpdate() {
     const lastUpdateElement = document.getElementById('last_update');
     if (lastUpdateElement) {
         // Extract the time string (should be in the format "Sist oppdatert: HH:MM:SS ...")
         const match = lastUpdateElement.textContent.match(/(\d{2}):(\d{2}):(\d{2})/);
         if (match) {
-            const now = new Date();
+            const serverTime = await fetch('/timestamp');
+            const serverTimeText = await serverTime.text();
+            const now = new Date(serverTimeText);
             const updateTime = new Date(now);
             updateTime.setHours(parseInt(match[1], 10));
             updateTime.setMinutes(parseInt(match[2], 10));

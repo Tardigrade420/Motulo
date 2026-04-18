@@ -89,7 +89,7 @@ def start():
 
       # If a worker thread already exists and is alive, don't start another one
       if _worker_thread is not None and _worker_thread.is_alive():
-         return
+         _worker_thread.join(timeout=5)
 
       # Start a new daemon worker thread
       _worker_thread = threading.Thread(target=worker, daemon=True)
