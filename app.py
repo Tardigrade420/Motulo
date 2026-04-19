@@ -63,6 +63,7 @@ def index():
     result = update[0]
     last_update = update[1]
     errormsg = update[2]
+    Losliste.healthcheck()
     return render_template('index.html', result=result, last_update=last_update, errormsg=errormsg, dest=dest, gt=gt, wx=wx, navbar=navbar, expanded=expanded)
 
 @app.route("/karsto")

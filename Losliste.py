@@ -181,3 +181,14 @@ def get_wind_fedje():
         wind_fedje = data
     except Exception as e:
         return None
+
+def healthcheck():
+   if last_update:
+      now = datetime.now(tz=pytz.timezone('Europe/Oslo'))
+      update_time = now.replace(hour=int(last_update.split(":")[0]), minute=int(last_update.split(":")[1]), second=int(last_update.split(":")[2]))
+      diff_minutes = (now - update_time).total_seconds() / 60
+      if diff_minutes > 20 and not errormsg:
+         start()
+         return "Startet automatisk oppdatering av database"
+      elif diff_minutes < 10 and not errormsg:
+         return "Alt ok"
