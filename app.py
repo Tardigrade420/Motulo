@@ -154,6 +154,7 @@ def kaier():
         
         for ship in ships[jetty]:
             if ship.get('name') is None:
+                kaier[jetty] = []
                 continue
             name = ship.get('name').title()
             kaier[jetty].append(name)
