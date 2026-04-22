@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+
+{% block head %}
+
+<title>Losliste - Kaier</title>
+
+{% endblock %}
+
+{% block body %}
+<div class="container py-3">
+<button class="btn btn-secondary mb-3" onclick="window.history.back();">Tilbake</button>
+</div>
+
+<div class="container mb-3 table-responsive justify-content-center">
+    <table class="table table-striped table-hover table-bordered">
+        <thead class="table-primary text-center">
+            <tr>
+                <th scope="col">Kai</th>
+                <th scope="col">Skip</th>
+                <th scope="col">Kai</th>
+                <th scope="col">Skip</th>
+            </tr>
+        </thead>
+        <tbody class="table-group-divider">
+        <tr>
+            <td>Kai 1</td>
+            <td>{{ kaier['kai1'] | join(', ') }}</td>
+            <td>Kai 2</td>
+            <td>{{ kaier['kai2'] | join(', ') }}</td>
+        </tr>
+        <tr>
+            <td>Kai 3</td>
+            <td>{{ kaier['kai3'] | join(', ') }}</td>
+            <td>Kai 4</td>
+            <td>{{ kaier['kai4'] | join(', ') }}</td>
+        </tr>
+        <tr>
+            <td>Kai 6</td>
+            <td>
+                {{ kaier['kai6'] | join(', ') }}
+            </td>
+            <td>Kai 7</td>
+            <td>{{ kaier['kai7'] | join(', ') }}</td>
+        </tr>
+        <tr>
+            <td>Kai 8</td>
+            <td>{{ kaier['kai8'] | join(', ') }}</td>
+            <td>Kai 9</td>
+            <td>{{ kaier['kai9'] | join(', ') }}</td>
+        </tr>
+        <tr>
+            <td>Kai 10</td>
+            <td>{{ kaier['kai10'] | join(', ') }}</td>
+            <td>Kai 11a</td>
+            <td>{{ kaier['kai11a'] | join(', ') }}</td>
+        </tr>
+        <tr>
+            <td>Kai 11b</td>
+            <td>{{ kaier['kai11b'] | join(', ') }}</td>
+            <td>Kai 12</td>
+            <td>{{ kaier['kai12'] | join(', ') }}</td>
+        </tr>
+        <tr>
+            <td>Kai 14</td>
+            <td>{{ kaier['kai14'] | join(', ') }}</td>
+            <td>Fedje</td>
+            <td>{{ kaier['fedje'] | join(', ') }}</td>
+        </tr>
+        <tr>
+            <td>Sture 1</td>
+            <td>{{ kaier['sture1'] | join(', ') }}</td>
+            <td>Sture 2</td>
+            <td>{{ kaier['sture2'] | join(', ') }}</td>
+        </tr>
+        <tr>
+            <td>Sture Modul</td>
+            <td>{{ kaier['sture3'] | join(', ') }}</td>
+            <td>Sture Taubåter</td>
+            <td>{{ kaier['sturetug'] | join(', ') }}</td>
+        </tr>
+        </tbody>   
+    </table>
+</div>
+
+<div class="container mb-3">
+    <div class="ratio ratio-16x9">
+        <iframe
+            title="NAIS"
+            src="https://nais.kystverket.no/embed/?N4Ig9gDgLglmB2BnEAuUBDGiAqAndAxgNYASMAJgKaoBm6ANopQDQiY77EBqliT9tBk1bwEASXhRKnWADdKAWXQRBjFiACuTJRABCYDfHLIUUXBvVbKAORgBzABZQFYKquGamALTBgAtgCCRgDClJLS7uqIDmAA7gAiWFDo8ASUwTC4BPS8qGYWrNFxupTouDDwdjwEUGC4JvlRMbEASpRpkgFYeIREDeaUAL6FyVKooOToyUxQwQg09iagAEaxfsqIyUZl5OMgYejLObumA8NsWJu4pX57B0eUJ42sC-RS9XsEBpK4AJ5ixlQAG0ALqsBwUSgAeXo5C6-QKIHWAA8AnZqCgQAAmAAMWIAbABaHEAFkJWKx2BxAA4UABmEkoHH4gB0AHYAJx0rwgEToWT2KZweAMADKoy0wJxzAAjMwscw6cwScwAKzMfHMNnManMDmy6UyuUyhUypUylUy1Vg8A0BYEGAMBR+RAwABiMDe0hMQNt9sdAlYYCgDgiNuiMAg2F+EHSU0odjqMFyKF9DHoAH1g6HcLy2JIYBmIGB6PQNLAEHmCGVE3nyDB5Bn5HxKIGQORruR0bmXlgIZU8xDHBnELHHhmCPgaFA8-R0LEM2EaHU0rOwNXM83+Hm-I8YBuM2YUshWH5PTBkn8sxAT+AQxFWBB0C3Kg+QBBPcGm7xt4+cs+NGuCcpxnR86igQ8wioHsQGuJhcHkXZCkwegKjsb8WzbRAyjzUd2gDYD0GnPMtiIN8oA0Ow80MIhRFieAQHDZo3X5JMpEQKF4HoX5IkGc4pgQK4bjuEUHieAZey9D40DYWp4GjWMAR9Q15UVZU1Q1LUdT1A1ZWNU1zUtdUZU1GVtRlXUZX1XF5TlCl5SVLEVSxdUCXlbUsV1LF9TpaU6RlEE+L5CsRXodYVBk+5jl409KBDX4TlAKLHjyM4+QFOwhQQCpNnTLKGMi0TopQOg1HOZZn14UZhXrdA7FETZ9yWfYipSkqhCGEQ6liBNHXgOhMlidBfma5KTlKphzgG3AhpGspShEw5iomzr31wYN2ikSZrnQRaxJi98S33Pcrn3GdCqWtqVv4owwF+IjMjQ-BX0mV9cAALwQDEkta8aOvOEUMvyobcHgNCvmfZIBAu-bTgsc4eqmHM9uW-6utwdEYGWT1oJRq60ZAEVy33BgCAcMpzp+y6-rK1h1uIPGacmv9CAOXdRt+g6IDnNJrHQdnRVkBgKtwcgACkUiUX4wkZg71nKWBd2Wb5tp4mHisac511KIxKGgBwvkkAxpKp2HrqDNIUiofXiwqKAOepg7EfvepqsE2W4dW+AIGMQC6DSf3zygNXTdR2n8zJuo6tKHaPfNkA8MeVCzygL4-F3LIAy3VsHbNgnE-IZOL2uSdShChhs8YOOCdkBwaEJL55HwdFq-D2R7fm3b1fxsrznCvZlcMQEZJHWI9noAcUBJFkOTZNkzTNDlqRxOkORxDk5RAOdzvxHEWWXulfIJGUcSsklVWpc4M3gb6t8n1UWRpU+OXxEyzLZfFPM1LeplQXf998myEkNJ8TUlVPiXeL8gogA6O8ce99H5f3xHSOeHI174g-uqH+O897UjMniEkoCV7MhMucT6-hUBmhZKqHEQC550lVC5VUbIV74nOOtcsGIQAAHpqIwD2FQZInpmqQBlu1cOu54AaD2KIgq10+KDCAA"
+            loading="lazy"
+            referrerpolicy="no-referrer"
+            style="border: 0;"
+        ></iframe>
+    </div>
+</div>
+
+{% endblock %}

@@ -58,7 +58,10 @@
 
     <div class="container">
         <div class="container">
-            <p id="last_update" style="font-size: smaller;">Sist oppdatert: {{ last_update }} {{ errormsg }}</p>
+            <div class="d-flex justify-content-between align-items-center py-3">
+                <p id="last_update" class="mb-0" style="font-size: smaller;">Sist oppdatert: {{ last_update }} {{ errormsg }}</p>
+                <p id="kaier" class="mb-0" style="font-size: smaller;"><a href="/kaier">Kaier</a></p>
+            </div>
         </div>
     </div>
     <style>

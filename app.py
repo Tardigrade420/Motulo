@@ -1,13 +1,18 @@
 from flask import Flask, render_template, request, session, redirect, url_for, Response
 import Losliste
 import os
+import ais_api
+import json
 from datetime import datetime
 import pytz
+from dotenv import load_dotenv
 
+load_dotenv()
 app = Flask(__name__)
 app.secret_key = os.getenv('SECRET_KEY')
 
 Losliste.start()
+
 
 @app.route("/sitemap.xml")
 def sitemap():
@@ -111,6 +116,10 @@ def status():
     except Exception:
         last_update_time = None
         last_update_minutes_ago = None
+    
+    healthcheck = Losliste.healthcheck()
+    restarts = healthcheck[0]
+    checks = healthcheck[1]
 
     status = {
         "server_time": cest.strftime("%H:%M:%S"),
@@ -118,6 +127,8 @@ def status():
         "last_update_minutes_ago": last_update_minutes_ago,
         "errormsg": Losliste.errormsg,
         "jobs": Losliste.get_jobs_info(),
+        "restarts": restarts,
+        "checks": checks,
     }
     return render_template('status.html', status=status)
 
@@ -125,10 +136,29 @@ def status():
 def restart():
     Losliste.start()
     return redirect(url_for('status'))
-
+ 
 @app.route("/timestamp")
 def timestamp():
     return datetime.now(tz=pytz.timezone('Europe/Oslo')).isoformat()
+
+@app.route("/kaier")
+def kaier():
+    ships = ais_api.get_ships_docked()
+    kaier = {}
+
+    for jetty in ships:
+        kaier[jetty] = []
+        if jetty == 'updated':
+            kaier[jetty] = ships[jetty].strftime("%H:%M:%S")
+            continue
+        
+        for ship in ships[jetty]:
+            if ship.get('name') is None:
+                continue
+            name = ship.get('name').title()
+            kaier[jetty].append(name)
+                
+    return render_template('kaier.html', kaier=kaier)
 
 if __name__ == "__main__":
     #Comment out for local testing

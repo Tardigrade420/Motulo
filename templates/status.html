@@ -45,6 +45,13 @@
             {% endif %}
         </div>
     </div>
+    <div class="row">
+        <div class="col-6">
+            <h5>Healthcheck</h5>
+            <p>Restarts: {{ status.restarts }}</p>
+            <p>Checks: {{ status.checks }}</p>
+        </div>
+    </div>
     <div class="row mt-4">
         <div class="col-12">
             <h5>Scheduler jobs</h5>

@@ -8,10 +8,13 @@ import schedule
 import threading
 import json
 
+#Global variables
 errormsg = ""
 last_update = None
 lock = threading.Lock()
 wind_fedje = None
+restarts = 0
+checks = 0
 
 # Track the worker thread so we don't start multiple copies
 _worker_thread = None
@@ -27,6 +30,7 @@ def current_pilotages():
    i = 0
    global last_update
    global errormsg
+   conn = None
    try:
       #Hente data inn til database
       conn = http.client.HTTPSConnection("www.shiprep.no")
@@ -64,6 +68,9 @@ def current_pilotages():
    except Exception as exception:
       error = type(exception)
       errormsg = "Feilet kl: " + cest.strftime("%H:%M:%S, ") + str(error) + str(exception)
+   finally:
+      if conn is not None:
+         conn.close()
 
 #Sørge for oppdatering av database hvert minutt
 def worker():
@@ -172,23 +179,34 @@ def karsto_query(des):
 #Hente inn vinddata fra Fedje KV
 def get_wind_fedje():
     global wind_fedje
+    conn = None
     try:
         conn = http.client.HTTPSConnection("mobvaer.kystverket.no")
         conn.request("GET", "/v4/stations/695059/free/lastSamples")
         response = conn.getresponse()
         data = json.loads(response.read().decode())
-        conn.close()
         wind_fedje = data
     except Exception as e:
         return None
+    finally:
+        if conn is not None:
+            conn.close()
 
 def healthcheck():
+   global restarts
+   global checks
    if last_update:
       now = datetime.now(tz=pytz.timezone('Europe/Oslo'))
       update_time = now.replace(hour=int(last_update.split(":")[0]), minute=int(last_update.split(":")[1]), second=int(last_update.split(":")[2]))
       diff_minutes = (now - update_time).total_seconds() / 60
-      if diff_minutes > 20 and not errormsg:
+      if diff_minutes > 5 and not errormsg:
+         restarts += 1
          start()
-         return "Startet automatisk oppdatering av database"
-      elif diff_minutes < 10 and not errormsg:
-         return "Alt ok"
+         return [restarts, checks]
+      elif diff_minutes <= 5 and not errormsg:
+         checks += 1
+         return [restarts, checks]
+      else:
+         return [restarts, checks]
+   else:
+      return [restarts, checks]
