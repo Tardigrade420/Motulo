@@ -113,6 +113,8 @@ def get_ships_docked():
         ships = api_call_ais(url, payload)
         if ships:
             ships_docked[jetty] = ships
+        else:
+            ships_docked[jetty] = []
     ships_docked["updated"] = datetime.now()
     
     return ships_docked
