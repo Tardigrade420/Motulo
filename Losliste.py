@@ -176,6 +176,25 @@ def karsto_query(des):
        res = ["feil"]
        return res, last_update, errormsg
     
+#sql query for navn på skip
+def ship_name_query(ship_name):
+    global errormsg
+    try:
+       con = sqlite3.connect('motulo.db')
+       cur = con.cursor()
+       col = '"ETA/ETD", "Ship Name", "Call Sign", "GT", "Type", "From", "To", "Locked"'
+       query = f'''SELECT {col} FROM los WHERE LOWER("Ship Name") LIKE "{ship_name}"'''
+       cur.execute(query)
+       res = cur.fetchall()
+       cur.close()
+       con.close()
+       return res, last_update, errormsg
+    except Exception as exception:
+       error = type(exception)
+       errormsg = "Database query failure: " + str(error) + " " + str(exception)
+       res = ["feil"]
+       return res, last_update, errormsg
+    
 #Hente inn vinddata fra Fedje KV
 def get_wind_fedje():
     global wind_fedje

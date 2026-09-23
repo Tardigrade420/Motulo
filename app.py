@@ -157,7 +157,14 @@ def kaier():
                 kaier[jetty] = []
                 continue
             name = ship.get('name').title()
-            kaier[jetty].append(name)
+            los = Losliste.ship_name_query(name)
+            if los[0]:
+                time = los[0][0][0]
+                locked = los[0][0][7]
+                name_formatted = f'{name} ({time[:2]}.{time[-5:]}{locked})'
+            else:
+                name_formatted = name
+            kaier[jetty].append(name_formatted)
                 
     return render_template('kaier.html', kaier=kaier)
 
