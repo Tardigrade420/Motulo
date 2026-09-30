@@ -208,9 +208,114 @@ async function fetchWindData() {
 }
 
 
+function formatDistanceValue(key, value) {
+    if (value === null || value === undefined || value === '') {
+        return '—';
+    }
+    if (key === 'dist') {
+        return `${value} nm`;
+    }
+    if (key === 'sog') {
+        return `${value} kn`;
+    }
+    if (key === 'cog' || key === 'hdg' || key === 'tgt_cog' || key === 'diff_cog') {
+        return `${value}°`;
+    }
+    if (key === 'msgtime') {
+        const date = new Date(value);
+        if (!Number.isNaN(date.getTime())) {
+            return date.toLocaleString('nb-NO', {
+                timeZone: 'Europe/Oslo',
+                day: '2-digit',
+                month: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            });
+        }
+    }
+    return String(value);
+}
+
+function distLabelForDest(dest) {
+    if (dest === 'mon') {
+        return 'Distanse til Mongstad';
+    }
+    if (dest === 'stu') {
+        return 'Distanse til Sture';
+    }
+    return 'Distanse til grunnlinje';
+}
+
+function renderDistanceData(data, dest) {
+    const labels = {
+        name: 'Skip',
+        dist: distLabelForDest(dest),
+        sog: 'Fart over grunn',
+        ttg: 'Tid igjen rett linje (t:m)',
+        hdg: 'Heading',
+        cog: 'Kurs over grunn',
+        tgt_cog: 'Kurs mot mål',
+        diff_cog: 'Kursavvik',
+        age: 'Oppdatert for:'
+    };
+    const order = ['dist', 'sog', 'ttg', 'hdg', 'cog', 'tgt_cog', 'diff_cog', 'age'];
+    const rows = order
+        .filter((key) => Object.prototype.hasOwnProperty.call(data, key))
+        .map((key) => `
+            <tr>
+                <th class="fw-normal text-muted pe-2">${labels[key] || key}</th>
+                <td class="text-end">${formatDistanceValue(key, data[key])}</td>
+            </tr>
+        `)
+        .join('');
+    return `<table class="table table-sm table-borderless mb-0">${rows}</table>`;
+}
+
+function initDistanceLinks() {
+    const modalElement = document.getElementById('distanceModal');
+    const modalBody = document.getElementById('distanceModalBody');
+    const modalTitle = document.getElementById('distanceModalLabel');
+    if (!modalElement || !modalBody) {
+        return;
+    }
+
+    const modal = bootstrap.Modal.getOrCreateInstance(modalElement);
+
+    document.querySelectorAll('.distance-link').forEach((link) => {
+        link.addEventListener('click', async (event) => {
+            event.preventDefault();
+            const callsign = link.dataset.callsign;
+            const dest = link.dataset.dest || 'hg';
+            const shipName = link.dataset.name || '';
+            modalTitle.textContent = callsign ? `${shipName} (${callsign})` : shipName;
+            modalBody.innerHTML = '<p class="mb-0 text-muted">Laster…</p>';
+            modal.show();
+
+            try {
+                const response = await fetch(`/distance?callsign=${encodeURIComponent(callsign)}&dest=${encodeURIComponent(dest)}`);
+                const payload = await response.json();
+                if (!response.ok || payload.error) {
+                    modalBody.innerHTML = `<p class="mb-0 text-danger">${payload.error || 'Kunne ikke hente distanse'}</p>`;
+                    return;
+                }
+                if (!payload.distance) {
+                    modalBody.innerHTML = '<p class="mb-0 text-danger">Ingen AIS-data funnet</p>';
+                    return;
+                }
+                modalBody.innerHTML = renderDistanceData(payload.distance, dest);
+            } catch (error) {
+                console.error('Error fetching distance:', error);
+                modalBody.innerHTML = '<p class="mb-0 text-danger">Kunne ikke hente distanse</p>';
+            }
+        });
+    });
+}
+
 // Call the scheduling function when the page loads
 document.addEventListener('DOMContentLoaded', () => {
     scheduleUpdates();
     checkLastUpdate();
     setInterval(checkLastUpdate, 60000); // Check every minute
+    initDistanceLinks();
 });

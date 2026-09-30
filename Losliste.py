@@ -133,7 +133,7 @@ def des_query(ton, des):
     try:
        con = sqlite3.connect('motulo.db')
        cur = con.cursor()
-       col = '"ETA/ETD", "Ship Name", "GT", "Type", "From", "To", "Locked"'
+       col = '"ETA/ETD", "Ship Name", "GT", "Type", "From", "To", "Locked", "Call Sign"'
        query = f'''SELECT {col} FROM los WHERE {des_q} CAST("GT" AS INTEGER) >= {ton}'''
        cur.execute(query)
        res = cur.fetchall()

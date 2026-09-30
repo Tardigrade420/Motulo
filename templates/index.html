@@ -91,12 +91,44 @@
                 <td>{{ row[0] }}</td>
                 <td>{{ row[1] }}</td>
                 <td>{{ row[2] }}</td>
-                <td>{{ row[4] }}</td>
-                <td>{{ row[5] }}</td>
+                <td>
+                    {% set from_place = (row[4] or '')|lower %}
+                    {% if 'holmengra' in from_place or 'holmengrå' in from_place %}
+                    <a href="{{ url_for('distance', callsign=row[7], dest='hg') }}" class="distance-link" data-callsign="{{ row[7] }}" data-name="{{ row[1] }}" data-dest="hg">{{ row[4] }}</a>
+                    {% elif 'fedje' in from_place or 'fedjeosen' in from_place %}
+                    <a href="{{ url_for('distance', callsign=row[7], dest='fo') }}" class="distance-link" data-callsign="{{ row[7] }}" data-name="{{ row[1] }}" data-dest="fo">{{ row[4] }}</a>
+                    {% else %}
+                    {{ row[4] }}
+                    {% endif %}
+                </td>
+                <td>
+                    {% set to_place = (row[5] or '')|lower %}
+                    {% if 'mongstad' in to_place %}
+                    <a href="{{ url_for('distance', callsign=row[7], dest='mon') }}" class="distance-link" data-callsign="{{ row[7] }}" data-name="{{ row[1] }}" data-dest="mon">{{ row[5] }}</a>
+                    {% elif 'sture' in to_place %}
+                    <a href="{{ url_for('distance', callsign=row[7], dest='stu') }}" class="distance-link" data-callsign="{{ row[7] }}" data-name="{{ row[1] }}" data-dest="stu">{{ row[5] }}</a>
+                    {% else %}
+                    {{ row[5] }}
+                    {% endif %}
+                </td>
             </tr>
             {% endfor %}
             </tbody>   
         </table>
+    </div>
+
+    <div class="modal fade" id="distanceModal" tabindex="-1" aria-labelledby="distanceModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-sm modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header py-2">
+                    <h6 class="modal-title" id="distanceModalLabel">Distanse til Holmengra</h6>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Lukk"></button>
+                </div>
+                <div class="modal-body" id="distanceModalBody">
+                    <p class="mb-0 text-muted">Laster…</p>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- Weather Information -->

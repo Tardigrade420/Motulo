@@ -96,6 +96,17 @@ def wind_fedje_route():
         return wind_data
     else:
         return {"error": "Failed to fetch wind data"}, 500
+    
+@app.route("/distance")
+def distance():
+    callsign = request.args.get('callsign')
+    dest = request.args.get('dest')
+    if not callsign or not dest:
+        return {"error": "Missing callsign or destination"}, 400
+    distance = ais_api.get_distance(callsign, dest)
+    if distance and hasattr(distance.get("msgtime"), "isoformat"):
+        distance["msgtime"] = distance["msgtime"].isoformat()
+    return {"distance": distance}
 
 @app.route("/status")
 def status():
