@@ -65,7 +65,7 @@ def get_token_kyst():
     headers = {'Content-Type': "application/json"}
     conn = None
     try:
-        conn = http.client.HTTPSConnection("kystdatahuset.no")
+        conn = http.client.HTTPSConnection("kystdatahuset.kystverket.no")
         conn.request("POST", "/ws/api/auth/login", json.dumps(payload), headers)
         res = conn.getresponse()
         data = json.loads(res.read().decode("utf-8"))
@@ -96,7 +96,7 @@ def api_call_kyst(url):
     }
     conn = None
     try:
-        conn = http.client.HTTPSConnection("kystdatahuset.no")
+        conn = http.client.HTTPSConnection("kystdatahuset.kystverket.no")
         conn.request("GET", url, payload, headers)
         res = conn.getresponse()
         data = json.loads(res.read().decode("utf-8"))
