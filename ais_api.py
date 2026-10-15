@@ -108,7 +108,7 @@ def api_call_kyst(url):
                 'Content-Type': "application/json",
                 'Authorization': f"Bearer {kyst_token}",
             }
-            conn.request("GET", url, headers)
+            conn.request("GET", url, payload, headers)
             res = conn.getresponse()
             if res.status != 200:
                 print(f"Feil med API call: {res.status} {res.reason}")
