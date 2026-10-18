@@ -99,7 +99,6 @@ def api_call_kyst(url):
         conn = http.client.HTTPSConnection("kystdatahuset.kystverket.no")
         conn.request("GET", url, payload, headers)
         res = conn.getresponse()
-        data = json.loads(res.read().decode("utf-8"))
         if res.status == 401:
             kyst_token = get_token_kyst()
             if kyst_token is None:
@@ -116,6 +115,7 @@ def api_call_kyst(url):
             data = json.loads(res.read().decode("utf-8"))
             return data
         elif res.status == 200:
+            data = json.loads(res.read().decode("utf-8"))
             return data
         else:
             print(f"Feil med API call: {res.status} {res.reason}")
